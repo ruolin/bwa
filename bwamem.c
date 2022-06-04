@@ -957,7 +957,7 @@ void mem_aln2sam(const mem_opt_t *opt, const bntseq_t *bns, kstring_t *str, bseq
 			}
 		}
 		if (p->alt_sc > 0)
-			ksprintf(str, "\tpa:f:%.3f", (double)p->score / p->alt_sc);
+			ksprintf_bwa(str, "\tpa:f:%.3f", (double)p->score / p->alt_sc);
 	}
 	if (p->XA) {
 		kputsn((opt->flag&MEM_F_XB)? "\tXB:Z:" : "\tXA:Z:", 6, str);

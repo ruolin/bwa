@@ -110,6 +110,6 @@ static inline int kputl(long c, kstring_t *s)
 	return 0;
 }
 
-int ksprintf(kstring_t *s, const char *fmt, ...);
+int ksprintf_bwa(kstring_t *s, const char *fmt, ...);
 
 #endif

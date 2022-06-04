@@ -6,7 +6,7 @@
 #  include "malloc_wrap.h"
 #endif
 
-int ksprintf(kstring_t *s, const char *fmt, ...)
+int ksprintf_bwa(kstring_t *s, const char *fmt, ...)
 {
 	va_list ap;
 	int l;

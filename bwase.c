@@ -213,7 +213,7 @@ char *bwa_cal_md1(int n_cigar, bwa_cigar_t *cigar, int len, bwtint_t pos, ubyte_
 				for (z = 0; z < l && x+z < l_pac; ++z) {
 					c = pacseq[(x+z)>>2] >> ((~(x+z)&3)<<1) & 3;
 					if (c > 3 || seq[y+z] > 3 || c != seq[y+z]) {
-						ksprintf(str, "%d", u);
+						ksprintf_bwa(str, "%d", u);
 						kputc("ACGTN"[c], str);
 						++nm;
 						u = 0;
@@ -224,7 +224,7 @@ char *bwa_cal_md1(int n_cigar, bwa_cigar_t *cigar, int len, bwtint_t pos, ubyte_
 				y += l;
 				if (__cigar_op(cigar[k]) == FROM_I) nm += l;
 			} else if (__cigar_op(cigar[k]) == FROM_D) {
-				ksprintf(str, "%d", u);
+				ksprintf_bwa(str, "%d", u);
 				kputc('^', str);
 				for (z = 0; z < l && x+z < l_pac; ++z)
 					kputc("ACGT"[pacseq[(x+z)>>2] >> ((~(x+z)&3)<<1) & 3], str);
@@ -236,14 +236,14 @@ char *bwa_cal_md1(int n_cigar, bwa_cigar_t *cigar, int len, bwtint_t pos, ubyte_
 		for (z = u = 0; z < (bwtint_t)len && x+z < l_pac; ++z) {
 			c = pacseq[(x+z)>>2] >> ((~(x+z)&3)<<1) & 3;
 			if (c > 3 || seq[y+z] > 3 || c != seq[y+z]) {
-				ksprintf(str, "%d", u);
+				ksprintf_bwa(str, "%d", u);
 				kputc("ACGTN"[c], str);
 				++nm;
 				u = 0;
 			} else ++u;
 		}
 	}
-	ksprintf(str, "%d", u);
+	ksprintf_bwa(str, "%d", u);
 	*_nm = nm;
 	return strdup(str->s);
 }

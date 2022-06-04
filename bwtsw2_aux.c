@@ -480,7 +480,7 @@ static void print_hits(const bntseq_t *bns, const bsw2opt_t *opt, bsw2seq1_t *ks
 	kstring_t str;
 	memset(&str, 0, sizeof(kstring_t));
 	if (b == 0 || b->n == 0) { // no hits
-		ksprintf(&str, "%s\t4\t*\t0\t0\t*\t*\t0\t0\t", ks->name);
+		ksprintf_bwa(&str, "%s\t4\t*\t0\t0\t*\t*\t0\t0\t", ks->name);
 		for (i = 0; i < ks->l; ++i) kputc(ks->seq[i], &str);
 		if (ks->qual) {
 			kputc('\t', &str);
@@ -494,15 +494,15 @@ static void print_hits(const bntseq_t *bns, const bsw2opt_t *opt, bsw2seq1_t *ks
 		int j, beg, end, type = 0;
 		// print mandatory fields before SEQ
 		if (q->cigar == 0) q->flag |= 0x4;
-		ksprintf(&str, "%s\t%d", ks->name, q->flag | (opt->multi_2nd && i? 0x100 : 0));
-		ksprintf(&str, "\t%s\t%ld", q->chr>=0? bns->anns[q->chr].name : "*", (long)q->pos + 1);
+		ksprintf_bwa(&str, "%s\t%d", ks->name, q->flag | (opt->multi_2nd && i? 0x100 : 0));
+		ksprintf_bwa(&str, "\t%s\t%ld", q->chr>=0? bns->anns[q->chr].name : "*", (long)q->pos + 1);
 		if (p->l == 0 && q->cigar) { // not a repetitive hit
-			ksprintf(&str, "\t%d\t", q->pqual);
+			ksprintf_bwa(&str, "\t%d\t", q->pqual);
 			for (k = 0; k < q->n_cigar; ++k)
-				ksprintf(&str, "%d%c", q->cigar[k]>>4, (opt->hard_clip? "MIDNHHP" : "MIDNSHP")[q->cigar[k]&0xf]);
-		} else ksprintf(&str, "\t0\t*");
+				ksprintf_bwa(&str, "%d%c", q->cigar[k]>>4, (opt->hard_clip? "MIDNHHP" : "MIDNSHP")[q->cigar[k]&0xf]);
+		} else ksprintf_bwa(&str, "\t0\t*");
 		if (!is_pe) kputs("\t*\t0\t0\t", &str);
-		else ksprintf(&str, "\t%s\t%d\t%d\t", q->mchr==q->chr? "=" : (q->mchr<0? "*" : bns->anns[q->mchr].name), q->mpos+1, q->isize);
+		else ksprintf_bwa(&str, "\t%s\t%d\t%d\t", q->mchr==q->chr? "=" : (q->mchr<0? "*" : bns->anns[q->mchr].name), q->mpos+1, q->isize);
 		// get the sequence begin and end
 		beg = 0; end = ks->l;
 		if (opt->hard_clip && q->cigar) {
@@ -522,12 +522,12 @@ static void print_hits(const bntseq_t *bns, const bsw2opt_t *opt, bsw2seq1_t *ks
 			}
 		} else kputs("\t*", &str);
 		// print optional tags
-		ksprintf(&str, "\tAS:i:%d\tXS:i:%d\tXF:i:%d\tXE:i:%d\tNM:i:%d", p->G, p->G2, p->flag>>16, p->n_seeds, q->nm);
-		if (q->nn) ksprintf(&str, "\tXN:i:%d", q->nn);
-		if (p->l) ksprintf(&str, "\tXI:i:%d", p->l - p->k + 1);
+		ksprintf_bwa(&str, "\tAS:i:%d\tXS:i:%d\tXF:i:%d\tXE:i:%d\tNM:i:%d", p->G, p->G2, p->flag>>16, p->n_seeds, q->nm);
+		if (q->nn) ksprintf_bwa(&str, "\tXN:i:%d", q->nn);
+		if (p->l) ksprintf_bwa(&str, "\tXI:i:%d", p->l - p->k + 1);
 		if (p->flag&BSW2_FLAG_MATESW) type |= 1;
 		if (p->flag&BSW2_FLAG_TANDEM) type |= 2;
-		if (type) ksprintf(&str, "\tXT:i:%d", type);
+		if (type) ksprintf_bwa(&str, "\tXT:i:%d", type);
 		if (opt->cpy_cmt && ks->comment) {
 			int l = strlen(ks->comment);
 			if (l >= 6 && ks->comment[2] == ':' && ks->comment[4] == ':') {
